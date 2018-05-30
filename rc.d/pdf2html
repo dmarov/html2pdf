@@ -1,0 +1,15 @@
+#!/bin/sh
+#
+
+. /etc/rc.subr
+
+export PATH=${PATH}:/usr/local/bin
+name="html2pdf"
+rcvar=html2pdf_enable
+pidfile="/var/run/html2pdf.pid"
+bin="/usr/local/html2pdf/index.js"
+command="/usr/sbin/daemon"
+command_args="-f -t ${name} -P ${pidfile} ${bin}"
+
+load_rc_config $name
+run_rc_command "$1"
