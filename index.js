@@ -1,14 +1,12 @@
 #!/usr/bin/env node
 const Koa = require('koa');
-const Router = require('koa-router');
+const Router = require('koa-better-router');
 const puppeteer = require('puppeteer');
-
 const app = new Koa();
 
+let router = new Router().loadMethods();
 
-let router = new Router();
-
-router.get('/html-to-pdf', async (ctx, next) => {
+router.get('/', async (ctx, next) => {
 
     try {
 
@@ -72,7 +70,9 @@ router.get('/html-to-pdf', async (ctx, next) => {
 
 });
 
-app.use(router.routes());
-app.use(router.allowedMethods());
+let apiRouter = Router({ prefix: '/api/v1' });
+apiRouter.extend(router);
 
-app.listen(80);
+app.use(apiRouter.middleware());
+
+app.listen(3001);

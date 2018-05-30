@@ -1,6 +1,9 @@
 #!/bin/sh
 #
 
+# PROVIDE: html2pdf
+# REQUIRE: DAEMON
+
 . /etc/rc.subr
 
 export PATH=${PATH}:/usr/local/bin
