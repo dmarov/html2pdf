@@ -56,7 +56,7 @@ router.get('/', async (ctx, next) => {
         let buf = await page.pdf(params);
         await browser.close();
 
-        ctx.set("Content-Type", "application/octet-stream");
+        ctx.set("Content-Type", "application/pdf");
         ctx.set("Content-Disposition", `attachment; filename="${name}"`);
         ctx.response.body = buf;
 
