@@ -1,9 +1,26 @@
 const Router = require('koa-better-router');
 const puppeteer = require('puppeteer');
+const fs = require('fs');
+const path = require('path');
+const args = require('../../lib/args');
+const kjwt = require('koa-jwt');
 
 const router = new Router().loadMethods();
 
-router.get('/', async (ctx, next) => {
+let publicKey = fs.readFileSync(path.resolve(args.publicKey));
+
+router.addRoute('OPTIONS', '/', async (ctx, next) => {
+
+    console.log(ctx.request.headers);
+    ctx.append('Access-Control-Allow-Origin', ctx.request.headers.origin);
+    ctx.append('Access-Control-Allow-Headers', 'authorization');
+    ctx.append('Access-Control-Allow-Method', 'GET');
+    ctx.append('Access-Control-Allow-Credentials', 'true');
+    ctx.status = 200;
+
+});
+
+router.get('/', kjwt({ secret: publicKey }), async (ctx, next) => {
 
     try {
 
