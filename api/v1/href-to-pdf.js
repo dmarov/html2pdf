@@ -28,7 +28,6 @@ router.get('/', async (ctx, next) => {
 
         if (e.name === 'JsonWebTokenError' || e.name === 'TokenExpiredError') {
 
-            console.log(e);
             ctx.status = 403;
             ctx.body = 'invalid token';
             return;
@@ -95,6 +94,7 @@ router.get('/', async (ctx, next) => {
 
     } catch (e) {
 
+        console.log(e);
         ctx.response.status = 500;
 
     }

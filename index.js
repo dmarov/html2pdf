@@ -5,6 +5,14 @@ const Router = require('koa-better-router');
 const apiV1 = require('./api/v1');
 const args = require('./lib/args');
 
+
+module.exports = async _ => {
+
+    let browser = await browserPromise;
+    return await browser.newPage();
+
+};
+
 const app = new Koa();
 
 // let publicKey = fs.readFileSync(path.resolve(args.publicKey));
