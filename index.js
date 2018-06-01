@@ -5,7 +5,6 @@ const Router = require('koa-better-router');
 const apiV1 = require('./api/v1');
 const args = require('./lib/args');
 
-
 module.exports = async _ => {
 
     let browser = await browserPromise;
@@ -14,20 +13,6 @@ module.exports = async _ => {
 };
 
 const app = new Koa();
-
-// let publicKey = fs.readFileSync(path.resolve(args.publicKey));
-
-// app.use(async (ctx, next) => {
-
-//     ctx.append('Access-Control-Allow-Origin', 'http://paxus.1mcg.ru.local');
-//     ctx.append('Access-Control-Allow-Headers', 'authorization');
-//     ctx.append('Access-Control-Allow-Method', 'GET');
-//     ctx.append('Access-Control-Allow-Credentials', 'true');
-//     ctx.status = 200;
-
-// });
-
-// app.use(kjwt({ secret: publicKey }));
 
 let apiV1Full = Router({ prefix: '/api/v1' });
 apiV1Full.extend(apiV1);

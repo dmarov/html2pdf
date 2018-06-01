@@ -85,8 +85,6 @@ router.get('/', async (ctx, next) => {
         await page.goto(href, {waitUntil: 'networkidle2'});
         let buf = await page.pdf(params);
         await page.close();
-        // await browser.close();
-        console.log("ok\n");
 
         ctx.set("Content-Type", "application/pdf");
         ctx.set("Content-Disposition", `attachment; filename="${name}"`);
