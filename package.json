@@ -5,9 +5,11 @@
   "license": "MIT",
   "dependencies": {
     "js-yaml": "^3.11.0",
+    "jsonwebtoken": "^8.2.2",
     "koa": "^2.5.1",
     "koa-better-router": "^2.1.1",
     "koa-jwt": "^3.3.2",
-    "puppeteer": "^1.4.0"
+    "puppeteer": "^1.4.0",
+    "sha1": "^1.1.1"
   }
 }

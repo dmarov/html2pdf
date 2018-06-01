@@ -1,26 +1,45 @@
 const Router = require('koa-better-router');
-const puppeteer = require('puppeteer');
 const fs = require('fs');
 const path = require('path');
 const args = require('../../lib/args');
-const kjwt = require('koa-jwt');
+const jwt = require('jsonwebtoken');
+const getBrowserPage = require('../../lib/get-browser-page');
+const sha1 = require('sha1');
 
 const router = new Router().loadMethods();
 
 let publicKey = fs.readFileSync(path.resolve(args.publicKey));
 
-router.addRoute('OPTIONS', '/', async (ctx, next) => {
+router.get('/', async (ctx, next) => {
 
-    console.log(ctx.request.headers);
-    ctx.append('Access-Control-Allow-Origin', ctx.request.headers.origin);
-    ctx.append('Access-Control-Allow-Headers', 'authorization');
-    ctx.append('Access-Control-Allow-Method', 'GET');
-    ctx.append('Access-Control-Allow-Credentials', 'true');
-    ctx.status = 200;
+    let token = ctx.query.jwt;
 
-});
+    try {
 
-router.get('/', kjwt({ secret: publicKey }), async (ctx, next) => {
+        let payload = jwt.verify(token, publicKey);
+        if (sha1(ctx.params.href) !== payload.sha1) {
+
+            ctx.status = 403;
+            ctx.body = 'not allowed link';
+            return;
+        }
+
+    } catch(e) {
+
+        if (e.name === 'JsonWebTokenError' || e.name === 'TokenExpiredError') {
+
+            console.log(e);
+            ctx.status = 403;
+            ctx.body = 'invalid token';
+            return;
+
+        } else throw e;
+
+    }
+
+    await next();
+
+}, async (ctx, next) => {
 
     try {
 
@@ -47,10 +66,6 @@ router.get('/', kjwt({ secret: publicKey }), async (ctx, next) => {
             right: query.right ? query.right : 0,
         }
 
-        const browser = await puppeteer.launch({
-            executablePath: '/usr/local/bin/chrome',
-        });
-
         let params = {
             scale: scale,
             margin: margin,
@@ -67,11 +82,12 @@ router.get('/', kjwt({ secret: publicKey }), async (ctx, next) => {
 
         }
 
-
-        const page = await browser.newPage();
+        let page = await getBrowserPage();
         await page.goto(href, {waitUntil: 'networkidle2'});
         let buf = await page.pdf(params);
-        await browser.close();
+        await page.close();
+        // await browser.close();
+        console.log("ok\n");
 
         ctx.set("Content-Type", "application/pdf");
         ctx.set("Content-Disposition", `attachment; filename="${name}"`);
