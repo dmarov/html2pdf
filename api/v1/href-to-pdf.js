@@ -17,7 +17,7 @@ router.get('/', async (ctx, next) => {
     try {
 
         let payload = jwt.verify(token, publicKey);
-        if (sha1(ctx.params.href) !== payload.sha1) {
+        if (sha1(ctx.query.href) !== payload.sha1) {
 
             ctx.status = 403;
             ctx.body = 'not allowed link';
